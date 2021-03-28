@@ -14,7 +14,22 @@ func main() {
   if err != nil {
     log.Fatal(err)
   }
+  receive(s)
+}
 
+func contains(a []byte, d byte) bool {
+  for _, v := range a {
+    if d == v {
+      return true
+    }
+  }
+  return false
+}
+
+func send(s *serial.Port) {
+}
+
+func receive(s *serial.Port) {
   n, err := s.Write([]byte("R"))
   if err != nil {
     log.Fatal(err)
@@ -41,13 +56,4 @@ func main() {
   if err != nil {
     log.Fatal(err)
   }
-}
-
-func contains(a []byte, d byte) bool {
-  for _, v := range a {
-    if d == v {
-      return true
-    }
-  }
-  return false
 }
