@@ -43,7 +43,7 @@ func send(s *serial.Port) {
     }
   }
 
-  sendData := []byte("3")
+  sendData := []byte{0xe3}
   _, err = s.Write(sendData)
   if err != nil {
     log.Fatal(err)
