@@ -14,7 +14,7 @@ func main() {
   if err != nil {
     log.Fatal(err)
   }
-  receive(s)
+  send(s)
 }
 
 func contains(a []byte, d byte) bool {
