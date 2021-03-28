@@ -27,6 +27,38 @@ func contains(a []byte, d byte) bool {
 }
 
 func send(s *serial.Port) {
+  _, err := s.Write([]byte("S"))
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  for {
+    buf := make([]byte, 128)
+    n, err := s.Read(buf)
+    if err != nil {
+      log.Fatal(err)
+    }
+    if contains(buf[:n], 'R') {
+      break
+    }
+  }
+
+  sendData := [] byte{3}
+  _, err = s.Write(sendData)
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  for {
+    buf := make([]byte, 128)
+    n, err := s.Read(buf)
+    if err != nil {
+      log.Fatal(err)
+    }
+    if contains(buf[:n], 'O') {
+      break
+    }
+  }
 }
 
 func receive(s *serial.Port) {
