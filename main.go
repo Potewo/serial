@@ -2,7 +2,7 @@ package serial
 
 import (
   "log"
-  "github.com/tarm/serial"
+  origin_serial "github.com/tarm/serial"
 )
 
 // usage:
@@ -18,10 +18,10 @@ import (
 //   send(s)
 // }
 
-type Config serial.Config
+type Config origin_serial.Config
 
-func OpenPort(c *serial.Config) (*serial.Port, error) {
-  return serial.OpenPort(c)
+func OpenPort(c *origin_serial.Config) (*origin_serial.Port, error) {
+  return origin_serial.OpenPort(c)
 }
 
 func contains(a []byte, d byte) bool {
@@ -33,7 +33,7 @@ func contains(a []byte, d byte) bool {
   return false
 }
 
-func Send(s *serial.Port) error {
+func Send(s *origin_serial.Port) error {
   _, err := s.Write([]byte("S"))
   if err != nil {
     return err
@@ -69,7 +69,7 @@ func Send(s *serial.Port) error {
   return err
 }
 
-func Receive(s *serial.Port) error {
+func Receive(s *origin_serial.Port) error {
   n, err := s.Write([]byte("R"))
   if err != nil {
     return err
