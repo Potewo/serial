@@ -1,4 +1,4 @@
-module github.com/Potewo/serial_test
+module github.com/Potewo/serial
 
 go 1.15
 
