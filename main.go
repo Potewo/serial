@@ -6,18 +6,24 @@ import (
   origin_serial "github.com/tarm/serial"
 )
 
-// usage:
-// func main() {
-//   c := &serial.Config{
-//     Name: "/dev/ttyACM0",
-//     Baud: 9600,
-//   }
-//   s, err := serial.OpenPort(c)
-//   if err != nil {
-//     log.Fatal(err)
-//   }
-//   send(s)
-// }
+/*
+usage:
+import (
+  "github.com/Potewo/serial"
+  "log"
+)
+func main() {
+  c := &serial.Config{
+    Name: "/dev/ttyACM0",
+    Baud: 9600,
+  }
+  s, err := serial.OpenPort(c)
+  if err != nil {
+    log.Fatal(err)
+  }
+  serial.Send(s)
+}
+*/
 
 type Config struct {
   Name string
