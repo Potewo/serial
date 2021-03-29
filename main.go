@@ -18,6 +18,10 @@ import (
 //   send(s)
 // }
 
+type Config struct {
+  *serial.Config
+}
+
 func contains(a []byte, d byte) bool {
   for _, v := range a {
     if d == v {
