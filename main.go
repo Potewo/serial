@@ -2,6 +2,7 @@ package serial
 
 import (
   "log"
+  "time"
   origin_serial "github.com/tarm/serial"
 )
 
@@ -18,10 +19,15 @@ import (
 //   send(s)
 // }
 
-type Config origin_serial.Config
+type Config struct {
+  Name string
+  Baud int
+  ReadTimeout time.Duration
+}
 
-func OpenPort(c *origin_serial.Config) (*origin_serial.Port, error) {
-  return origin_serial.OpenPort(c)
+func OpenPort(c *Config) (*origin_serial.Port, error) {
+  oc := &origin_serial.Config {Name: c.Name, Baud: c.Baud, ReadTimeout: c.ReadTimeout}
+  return origin_serial.OpenPort(oc)
 }
 
 func contains(a []byte, d byte) bool {
