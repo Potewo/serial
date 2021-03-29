@@ -1,21 +1,22 @@
-package main
+package serial
 
 import (
   "log"
   "github.com/tarm/serial"
 )
 
-func main() {
-  c := &serial.Config{
-    Name: "/dev/ttyACM0",
-    Baud: 9600,
-  }
-  s, err := serial.OpenPort(c)
-  if err != nil {
-    log.Fatal(err)
-  }
-  send(s)
-}
+// usage:
+// func main() {
+//   c := &serial.Config{
+//     Name: "/dev/ttyACM0",
+//     Baud: 9600,
+//   }
+//   s, err := serial.OpenPort(c)
+//   if err != nil {
+//     log.Fatal(err)
+//   }
+//   send(s)
+// }
 
 func contains(a []byte, d byte) bool {
   for _, v := range a {
@@ -26,17 +27,17 @@ func contains(a []byte, d byte) bool {
   return false
 }
 
-func send(s *serial.Port) {
+func Send(s *serial.Port) error {
   _, err := s.Write([]byte("S"))
   if err != nil {
-    log.Fatal(err)
+    return err
   }
 
   for {
     buf := make([]byte, 128)
     n, err := s.Read(buf)
     if err != nil {
-      log.Fatal(err)
+      return err
     }
     if contains(buf[:n], 'R') {
       break
@@ -46,25 +47,26 @@ func send(s *serial.Port) {
   sendData := []byte{0xe3}
   _, err = s.Write(sendData)
   if err != nil {
-    log.Fatal(err)
+    return err
   }
 
   for {
     buf := make([]byte, 128)
     n, err := s.Read(buf)
     if err != nil {
-      log.Fatal(err)
+      return err
     }
     if contains(buf[:n], 'O') {
       break
     }
   }
+  return err
 }
 
-func receive(s *serial.Port) {
+func Receive(s *serial.Port) error {
   n, err := s.Write([]byte("R"))
   if err != nil {
-    log.Fatal(err)
+    return err
   }
 
   data := make([]byte, 0)
@@ -72,7 +74,7 @@ func receive(s *serial.Port) {
     buf := make([]byte, 128)
     n, err = s.Read(buf)
     if err != nil {
-      log.Fatal(err)
+      return err
     }
     if contains(buf[:n], '\x00') {
       continue
@@ -86,6 +88,7 @@ func receive(s *serial.Port) {
 
   _, err = s.Write([]byte("O"))
   if err != nil {
-    log.Fatal(err)
+    return err
   }
+  return nil
 }
