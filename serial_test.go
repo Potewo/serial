@@ -16,8 +16,11 @@ func TestReceiveSuccess(t *testing.T) {
   if err != nil {
     t.Fatal(err)
   }
-  if err := Receive(s); err != nil {
+  d, err := Receive(s)
+  if err != nil {
     t.Fatal(err)
+  } else {
+    t.Logf("%q", d);
   }
 }
 
@@ -32,7 +35,7 @@ func TestSendSuccess(t *testing.T) {
   if err != nil {
     t.Fatal(err)
   }
-  if err := Send(s); err != nil {
+  if err := Send(s, byte(0x3e)); err != nil {
     t.Fatal(err)
   }
 }
