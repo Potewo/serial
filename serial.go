@@ -45,7 +45,7 @@ func contains(a []byte, d byte) bool {
   return false
 }
 
-func Send(s *origin_serial.Port) error {
+func Send(s *origin_serial.Port, d byte) error {
   _, err := s.Write([]byte("S"))
   if err != nil {
     return err
@@ -62,7 +62,7 @@ func Send(s *origin_serial.Port) error {
     }
   }
 
-  sendData := []byte{0xe3}
+  sendData := []byte{d}
   _, err = s.Write(sendData)
   if err != nil {
     return err
@@ -81,10 +81,10 @@ func Send(s *origin_serial.Port) error {
   return err
 }
 
-func Receive(s *origin_serial.Port) error {
+func Receive(s *origin_serial.Port) ([]byte, error) {
   n, err := s.Write([]byte("R"))
   if err != nil {
-    return err
+    return nil, err
   }
 
   data := make([]byte, 0)
@@ -92,7 +92,7 @@ func Receive(s *origin_serial.Port) error {
     buf := make([]byte, 128)
     n, err = s.Read(buf)
     if err != nil {
-      return err
+      return nil, err
     }
     if contains(buf[:n], '\x00') {
       continue
@@ -102,11 +102,10 @@ func Receive(s *origin_serial.Port) error {
       break
     }
   }
-  log.Printf("%q", data)
 
   _, err = s.Write([]byte("O"))
   if err != nil {
-    return err
+    return nil, err
   }
-  return nil
+  return data, nil
 }
