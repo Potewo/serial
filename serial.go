@@ -1,7 +1,6 @@
 package serial
 
 import (
-  "log"
   "time"
   origin_serial "github.com/tarm/serial"
 )
@@ -45,7 +44,7 @@ func contains(a []byte, d byte) bool {
   return false
 }
 
-func Send(s *origin_serial.Port, d byte) error {
+func send(s *origin_serial.Port, d byte) error {
   _, err := s.Write([]byte("S"))
   if err != nil {
     return err
@@ -79,6 +78,16 @@ func Send(s *origin_serial.Port, d byte) error {
     }
   }
   return err
+}
+
+func Send(s *origin_serial.Port, d []byte) error {
+  for _, di := range d {
+    err := send(s, di)
+    if err != nil {
+      return err
+    }
+  }
+  return nil
 }
 
 func Receive(s *origin_serial.Port) ([]byte, error) {
