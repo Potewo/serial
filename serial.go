@@ -50,15 +50,9 @@ func send(s *origin_serial.Port, d byte) error {
     return err
   }
 
-  for {
-    buf := make([]byte, 128)
-    n, err := s.Read(buf)
-    if err != nil {
-      return err
-    }
-    if contains(buf[:n], 'R') {
-      break
-    }
+  err = wait(s, 'R')
+  if err != nil {
+    return err
   }
 
   sendData := []byte{d}
@@ -67,20 +61,36 @@ func send(s *origin_serial.Port, d byte) error {
     return err
   }
 
+  err = wait(s, 'O')
+  if err != nil {
+    return err
+  }
+  return nil
+}
+
+func wait(s *origin_serial.Port, b byte) error {
   for {
     buf := make([]byte, 128)
     n, err := s.Read(buf)
     if err != nil {
       return err
     }
-    if contains(buf[:n], 'O') {
+    if contains(buf[:n], b) {
       break
     }
   }
-  return err
+  return nil
 }
 
 func Send(s *origin_serial.Port, d []byte) error {
+  s.Write([]byte("N"))
+  err := wait(s, 'O')
+  if err != nil {
+    return err
+  }
+
+  s.Write([]byte {uint8(len(d))})
+
   for _, di := range d {
     err := send(s, di)
     if err != nil {
