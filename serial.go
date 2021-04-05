@@ -83,19 +83,27 @@ func wait(s *origin_serial.Port, b byte) error {
 }
 
 func Send(s *origin_serial.Port, d []byte) error {
-	s.Write([]byte("N"))
-	err := wait(s, 'O')
+	// send S(send) status
+	_, err := s.Write([]byte("S"))
+	if err != nil {
+		return err
+	}
+	// send length of data
+	_, err = s.Write([]byte {uint8(len(d))})
+	if err != nil {
+		return err
+	}
+	err = wait(s, 'O')
 	if err != nil {
 		return err
 	}
 
-	s.Write([]byte{uint8(len(d))})
+	// send main data
+	_, err = s.Write(d)
 
-	for _, di := range d {
-		err := send(s, di)
-		if err != nil {
-			return err
-		}
+	err = wait(s, 'O')
+	if err != nil {
+		return err
 	}
 	return nil
 }
@@ -113,9 +121,7 @@ func Receive(s *origin_serial.Port) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		if contains(buf[:n], '\x00') {
-			continue
-		}
+
 		data = append(data, buf[:n]...)
 		if contains(buf, '\n') {
 			break
