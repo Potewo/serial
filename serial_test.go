@@ -35,7 +35,7 @@ func TestSendSuccess(t *testing.T) {
   if err != nil {
     t.Fatal(err)
   }
-  err = Send(s, []byte {0x3e, 0x64})
+  err = Send(s, []byte {0x3e, 0x64, 0x00})
   if err != nil {
     t.Fatal(err)
   }
